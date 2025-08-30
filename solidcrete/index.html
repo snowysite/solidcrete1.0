@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolidCrete Building Solutions - Professional Waterproofing Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item {
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .toast {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center">
+                    <div class="mr-4">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Main building structure -->
+                            <rect width="60" height="60" rx="12" fill="url(#gradient1)"/>
+                            
+                            <!-- Building base -->
+                            <rect x="8" y="35" width="44" height="20" rx="2" fill="white"/>
+                            
+                            <!-- Building roof -->
+                            <path d="M8 35L30 15L52 35H8Z" fill="white"/>
+                            
+                            <!-- Waterproofing layer effect -->
+                            <path d="M8 35L30 15L52 35H8Z" fill="url(#gradient2)" opacity="0.3"/>
+                            
+                            <!-- Water droplets -->
+                            <circle cx="45" cy="20" r="3" fill="#60a5fa"/>
+                            <circle cx="42" cy="25" r="2" fill="#93c5fd"/>
+                            <circle cx="48" cy="27" r="2.5" fill="#3b82f6"/>
+                            
+                            <!-- Protection shield -->
+                            <path d="M15 45L20 40L25 45L20 50L15 45Z" fill="#2563eb"/>
+                            
+                            <!-- Company initials -->
+                            <text x="30" y="48" text-anchor="middle" fill="#2563eb" font-family="Arial, sans-serif" font-weight="bold" font-size="8">SC</text>
+                            
+                            <!-- Gradient definitions -->
+                            <defs>
+                                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+                                </linearGradient>
+                                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-blue-600">SolidCrete</h1>
+                        <span class="text-gray-600 text-sm font-medium">Building Solutions</span>
+                        <div class="text-xs text-blue-500">Waterproofing Experts</div>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition duration-300 font-medium">Home</a>
+                    <a href="#services" class="text-gray-700 hover:text-blue-600 transition duration-300 font-medium">Services</a>
+                    <a href="#gallery" class="text-gray-700 hover:text-blue-600 transition duration-300 font-medium">Gallery</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition duration-300 font-medium">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition duration-300 font-medium">Contact</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#home" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                <a href="#services" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Services</a>
+                <a href="#gallery" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Gallery</a>
+                <a href="#about" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">About</a>
+                <a href="#contact" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg text-white pt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">Professional Waterproofing Solutions</h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Protect your building with our expert waterproofing services. Quality guaranteed, Lagos trusted.</p>
+                <div class="space-y-4 md:space-y-0 md:space-x-4 md:flex md:justify-center">
+                    <button onclick="openBookingModal()" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300 w-full md:w-auto">Book Now</button>
+                    <a href="#services" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300 inline-block w-full md:w-auto text-center">Our Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Waterproofing Services</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Comprehensive waterproofing solutions for residential and commercial buildings</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="service-card bg-gray-50 p-8 rounded-lg shadow-md">
+                    <div class="text-blue-600 text-4xl mb-4">🏠</div>
+                    <h3 class="text-xl font-semibold mb-4">Roof Waterproofing</h3>
+                    <p class="text-gray-600 mb-4">Complete roof protection against water damage with premium materials and expert installation.</p>
+                    <div class="text-sm text-gray-500 mb-4">Starting from ₦2,500/sqm</div>
+                    <button onclick="openBookingModal('Roof Waterproofing')" class="text-blue-600 font-semibold hover:text-blue-800">Book Service →</button>
+                </div>
+                <div class="service-card bg-gray-50 p-8 rounded-lg shadow-md">
+                    <div class="text-blue-600 text-4xl mb-4">🏢</div>
+                    <h3 class="text-xl font-semibold mb-4">Wall Waterproofing</h3>
+                    <p class="text-gray-600 mb-4">Exterior and interior wall protection to prevent moisture penetration and structural damage.</p>
+                    <div class="text-sm text-gray-500 mb-4">Starting from ₦2,000/sqm</div>
+                    <button onclick="openBookingModal('Wall Waterproofing')" class="text-blue-600 font-semibold hover:text-blue-800">Book Service →</button>
+                </div>
+                <div class="service-card bg-gray-50 p-8 rounded-lg shadow-md">
+                    <div class="text-blue-600 text-4xl mb-4">🏗️</div>
+                    <h3 class="text-xl font-semibold mb-4">Foundation Waterproofing</h3>
+                    <p class="text-gray-600 mb-4">Basement and foundation protection to ensure long-term structural integrity.</p>
+                    <div class="text-sm text-gray-500 mb-4">Starting from ₦3,000/sqm</div>
+                    <button onclick="openBookingModal('Foundation Waterproofing')" class="text-blue-600 font-semibold hover:text-blue-800">Book Service →</button>
+                </div>
+                <div class="service-card bg-gray-50 p-8 rounded-lg shadow-md">
+                    <div class="text-blue-600 text-4xl mb-4">🚿</div>
+                    <h3 class="text-xl font-semibold mb-4">Bathroom Waterproofing</h3>
+                    <p class="text-gray-600 mb-4">Specialized bathroom and wet area waterproofing for complete moisture protection.</p>
+                    <div class="text-sm text-gray-500 mb-4">Starting from ₦3,500/sqm</div>
+                    <button onclick="openBookingModal('Bathroom Waterproofing')" class="text-blue-600 font-semibold hover:text-blue-800">Book Service →</button>
+                </div>
+                <div class="service-card bg-gray-50 p-8 rounded-lg shadow-md">
+                    <div class="text-blue-600 text-4xl mb-4">🏊</div>
+                    <h3 class="text-xl font-semibold mb-4">Pool Waterproofing</h3>
+                    <p class="text-gray-600 mb-4">Swimming pool and water feature waterproofing with durable, long-lasting solutions.</p>
+                    <div class="text-sm text-gray-500 mb-4">Starting from ₦4,000/sqm</div>
+                    <button onclick="openBookingModal('Pool Waterproofing')" class="text-blue-600 font-semibold hover:text-blue-800">Book Service →</button>
+                </div>
+                <div class="service-card bg-gray-50 p-8 rounded-lg shadow-md">
+                    <div class="text-blue-600 text-4xl mb-4">🔧</div>
+                    <h3 class="text-xl font-semibold mb-4">Emergency Leak Repair</h3>
+                    <p class="text-gray-600 mb-4">24/7 emergency leak detection and repair services with rapid response guarantee.</p>
+                    <div class="text-sm text-gray-500 mb-4">Starting from ₦1,500/sqm</div>
+                    <button onclick="openBookingModal('Leak Repair')" class="text-blue-600 font-semibold hover:text-blue-800">Book Service →</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Work Gallery</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">See our completed waterproofing projects across Lagos</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="galleryGrid">
+                <!-- Real project images -->
+                <div class="gallery-item bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="h-48 rounded-lg mb-4 overflow-hidden">
+                        <img src="images/IMG-20250830-WA0029.jpg" alt="Roof Waterproofing Project" class="w-full h-full object-cover" onerror="this.src=''; this.alt='Image failed to load'; this.parentElement.innerHTML='<div class=\'bg-gray-200 h-48 rounded-lg flex items-center justify-center\'><span class=\'text-gray-500\'>📷 Image not available</span></div>';">
+                    </div>
+                    <h3 class="font-semibold text-gray-900">Luxury Villa Roof Waterproofing</h3>
+                    <p class="text-gray-600 text-sm">Banana Island, Lagos</p>
+                    <div class="text-xs text-green-600 mt-2">✓ Completed - 5 Year Warranty</div>
+                </div>
+                <div class="gallery-item bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="h-48 rounded-lg mb-4 overflow-hidden">
+                        <img src="images/IMG-20250830-WA0041.jpg" alt="Commercial Building Waterproofing" class="w-full h-full object-cover" onerror="this.src=''; this.alt='Image failed to load'; this.parentElement.innerHTML='<div class=\'bg-gray-200 h-48 rounded-lg flex items-center justify-center\'><span class=\'text-gray-500\'>📷 Image not available</span></div>';">
+                    </div>
+                    <h3 class="font-semibold text-gray-900">Office Complex Waterproofing</h3>
+                    <p class="text-gray-600 text-sm">Victoria Island, Lagos</p>
+                    <div class="text-xs text-green-600 mt-2">✓ Completed - 10 Year Warranty</div>
+                </div>
+                <div class="gallery-item bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="h-48 rounded-lg mb-4 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2131&q=80" alt="Foundation Waterproofing Project" class="w-full h-full object-cover" onerror="this.src=''; this.alt='Image failed to load'; this.parentElement.innerHTML='<div class=\'bg-gray-200 h-48 rounded-lg flex items-center justify-center\'><span class=\'text-gray-500\'>📷 Image not available</span></div>';">
+                    </div>
+                    <h3 class="font-semibold text-gray-900">High-Rise Foundation Protection</h3>
+                    <p class="text-gray-600 text-sm">Ikoyi, Lagos</p>
+                    <div class="text-xs text-green-600 mt-2">✓ Completed - 15 Year Warranty</div>
+                </div>
+                <div class="gallery-item bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="h-48 rounded-lg mb-4 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80" alt="Bathroom Waterproofing Project" class="w-full h-full object-cover" onerror="this.src=''; this.alt='Image failed to load'; this.parentElement.innerHTML='<div class=\'bg-gray-200 h-48 rounded-lg flex items-center justify-center\'><span class=\'text-gray-500\'>📷 Image not available</span></div>';">
+                    </div>
+                    <h3 class="font-semibold text-gray-900">Luxury Bathroom Waterproofing</h3>
+                    <p class="text-gray-600 text-sm">Lekki Phase 1, Lagos</p>
+                    <div class="text-xs text-green-600 mt-2">✓ Completed - 7 Year Warranty</div>
+                </div>
+                <div class="gallery-item bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="h-48 rounded-lg mb-4 overflow-hidden">
+                        <img src="images/IMG-20250830-WA0043.jpg" alt="Swimming Pool Waterproofing" class="w-full h-full object-cover" onerror="this.src=''; this.alt='Image failed to load'; this.parentElement.innerHTML='<div class=\'bg-gray-200 h-48 rounded-lg flex items-center justify-center\'><span class=\'text-gray-500\'>📷 Image not available</span></div>';">
+                    </div>
+                    <h3 class="font-semibold text-gray-900">Resort Pool Waterproofing</h3>
+                    <p class="text-gray-600 text-sm">Ajah, Lagos</p>
+                    <div class="text-xs text-green-600 mt-2">✓ Completed - 12 Year Warranty</div>
+                </div>
+                <div class="gallery-item bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="h-48 rounded-lg mb-4 overflow-hidden">
+                        <img src="images/IMG-20250830-WA0034.jpg" alt="Wall Waterproofing Project" class="w-full h-full object-cover" onerror="this.src=''; this.alt='Image failed to load'; this.parentElement.innerHTML='<div class=\'bg-gray-200 h-48 rounded-lg flex items-center justify-center\'><span class=\'text-gray-500\'>📷 Image not available</span></div>';">
+                    </div>
+                    <h3 class="font-semibold text-gray-900">Residential Wall Protection</h3>
+                    <p class="text-gray-600 text-sm">Surulere, Lagos</p>
+                    <div class="text-xs text-green-600 mt-2">✓ Completed - 8 Year Warranty</div>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <button onclick="openImageUpload()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">Add Project Images</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Calculator Section -->
+    <section class="py-20 bg-blue-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get Instant Quote</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Calculate an estimated cost for your waterproofing project</p>
+            </div>
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Service Type</label>
+                        <select id="quoteService" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select service</option>
+                            <option value="Roof Waterproofing">Roof Waterproofing</option>
+                            <option value="Wall Waterproofing">Wall Waterproofing</option>
+                            <option value="Foundation Waterproofing">Foundation Waterproofing</option>
+                            <option value="Bathroom Waterproofing">Bathroom Waterproofing</option>
+                            <option value="Pool Waterproofing">Pool Waterproofing</option>
+                            <option value="Leak Repair">Emergency Leak Repair</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Area (Square Meters)</label>
+                        <input type="number" id="quoteArea" min="1" step="0.1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 50">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Urgency</label>
+                        <select id="quoteUrgency" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="standard">Standard (7-14 days)</option>
+                            <option value="urgent">Urgent (3-5 days) +20%</option>
+                            <option value="emergency">Emergency (24-48 hrs) +50%</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <button onclick="calculateQuote()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 flex items-center justify-center">
+                        <span id="quoteButtonText">Calculate Detailed Quote</span>
+                        <div id="quoteSpinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </div>
+                <div id="quoteResult" class="mt-6"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">About SolidCrete Building Solutions</h2>
+                    <p class="text-lg text-gray-600 mb-6">With over 5 years of experience in the waterproofing industry, we are Lagos's most trusted partner for building protection. Our expert team uses premium materials and proven techniques to ensure your property stays dry and secure.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">Licensed and Insured Professionals</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">5+ Years of Experience</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">100% Satisfaction Guarantee</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">24/7 Emergency Services</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">500+ Successful Projects</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Why Choose SolidCrete?</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li>• Premium quality materials from trusted international suppliers</li>
+                        <li>• Experienced and certified waterproofing technicians</li>
+                        <li>• Comprehensive warranty on all work (5-15 years)</li>
+                        <li>• Competitive pricing with transparent, detailed quotes</li>
+                        <li>• Fast response times and reliable project completion</li>
+                        <li>• Serving all areas across Lagos State and beyond</li>
+                        <li>• Free consultation and site inspection</li>
+                        <li>• Post-completion maintenance support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Quote Calculator Section -->
+    <section class="py-20 bg-blue-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get Instant Quote</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Calculate an estimated cost for your waterproofing project</p>
+            </div>
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Service Type</label>
+                        <select id="quoteService" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select service</option>
+                            <option value="Roof Waterproofing">Roof Waterproofing</option>
+                            <option value="Wall Waterproofing">Wall Waterproofing</option>
+                            <option value="Foundation Waterproofing">Foundation Waterproofing</option>
+                            <option value="Bathroom Waterproofing">Bathroom Waterproofing</option>
+                            <option value="Pool Waterproofing">Pool Waterproofing</option>
+                            <option value="Leak Repair">Emergency Leak Repair</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Area (Square Meters)</label>
+                        <input type="number" id="quoteArea" min="1" step="0.1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 50">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Urgency</label>
+                        <select id="quoteUrgency" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="standard">Standard (7-14 days)</option>
+                            <option value="urgent">Urgent (3-5 days) +20%</option>
+                            <option value="emergency">Emergency (24-48 hrs) +50%</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <button onclick="calculateQuote()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 flex items-center justify-center">
+                        <span id="quoteButtonText">Calculate Detailed Quote</span>
+                        <div id="quoteSpinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </div>
+                <div id="quoteResult" class="mt-6"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">About SolidCrete Building Solutions</h2>
+                    <p class="text-lg text-gray-600 mb-6">With over 5 years of experience in the waterproofing industry, we are Lagos's most trusted partner for building protection. Our expert team uses premium materials and proven techniques to ensure your property stays dry and secure.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">Licensed and Insured Professionals</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">5+ Years of Experience</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">100% Satisfaction Guarantee</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">24/7 Emergency Services</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-blue-600 text-2xl mr-4">✓</div>
+                            <span class="text-gray-700">500+ Successful Projects</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Why Choose SolidCrete?</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li>• Premium quality materials from trusted international suppliers</li>
+                        <li>• Experienced and certified waterproofing technicians</li>
+                        <li>• Comprehensive warranty on all work (5-15 years)</li>
+                        <li>• Competitive pricing with transparent, detailed quotes</li>
+                        <li>• Fast response times and reliable project completion</li>
+                        <li>• Serving all areas across Lagos State and beyond</li>
+                        <li>• Free consultation and site inspection</li>
+                        <li>• Post-completion maintenance support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get In Touch</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Ready to protect your building? Contact us for a free consultation and detailed quote.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div>
+                    <div class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Contact Information</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="text-blue-600 text-xl mr-4 mt-1">📍</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Head Office</h4>
+                                    <p class="text-gray-600">2 Juwon Osibanjo Avenue<br>Itamaga, Ikorodu<br>Lagos State, Nigeria</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="text-blue-600 text-xl mr-4 mt-1">📞</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Phone & WhatsApp</h4>
+                                    <p class="text-gray-600">+234 XXX XXX XXXX</p>
+                                    <button onclick="openWhatsApp()" class="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition duration-300 flex items-center">
+                                        <span class="mr-2">💬</span> Chat on WhatsApp
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="text-blue-600 text-xl mr-4 mt-1">✉️</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Email</h4>
+                                    <p class="text-gray-600">info@solidcrete.com.ng</p>
+                                    <p class="text-gray-600 text-sm">quotes@solidcrete.com.ng</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="text-blue-600 text-xl mr-4 mt-1">🕒</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Business Hours</h4>
+                                    <p class="text-gray-600">Mon - Sat: 8:00 AM - 6:00 PM<br>Sunday: Emergency Only<br>24/7 Emergency Hotline Available</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
+                        <form id="contactForm" class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">First Name</label>
+                                    <input type="text" name="firstName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">Last Name</label>
+                                    <input type="text" name="lastName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Email Address</label>
+                                <input type="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Phone Number</label>
+                                <input type="tel" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Service Interest</label>
+                                <select name="serviceInterest" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="">Select service type</option>
+                                    <option value="Roof Waterproofing">Roof Waterproofing</option>
+                                    <option value="Wall Waterproofing">Wall Waterproofing</option>
+                                    <option value="Foundation Waterproofing">Foundation Waterproofing</option>
+                                    <option value="Bathroom Waterproofing">Bathroom Waterproofing</option>
+                                    <option value="Pool Waterproofing">Pool Waterproofing</option>
+                                    <option value="Emergency Repair">Emergency Leak Repair</option>
+                                    <option value="Consultation">Free Consultation</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Message</label>
+                                <textarea rows="4" name="message" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Tell us about your project requirements..." required></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 flex items-center justify-center">
+                                <span id="contactButtonText">Send Message</span>
+                                <div id="contactSpinner" class="spinner ml-2 hidden"></div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3">
+                            <rect width="60" height="60" rx="12" fill="url(#footerGradient1)"/>
+                            <rect x="8" y="35" width="44" height="20" rx="2" fill="white"/>
+                            <path d="M8 35L30 15L52 35H8Z" fill="white"/>
+                            <path d="M8 35L30 15L52 35H8Z" fill="url(#footerGradient2)" opacity="0.3"/>
+                            <circle cx="45" cy="20" r="3" fill="#60a5fa"/>
+                            <circle cx="42" cy="25" r="2" fill="#93c5fd"/>
+                            <circle cx="48" cy="27" r="2.5" fill="#3b82f6"/>
+                            <path d="M15 45L20 40L25 45L20 50L15 45Z" fill="#2563eb"/>
+                            <text x="30" y="48" text-anchor="middle" fill="#2563eb" font-family="Arial, sans-serif" font-weight="bold" font-size="8">SC</text>
+                            <defs>
+                                <linearGradient id="footerGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+                                </linearGradient>
+                                <linearGradient id="footerGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div>
+                            <h3 class="text-xl font-bold">SolidCrete</h3>
+                            <p class="text-sm text-gray-400">Building Solutions</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">Your trusted partner for professional waterproofing services across Lagos and Nigeria.</p>
+                    <p class="text-gray-400 text-sm">Licensed • Insured • Guaranteed</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#services" class="hover:text-white transition duration-300">Roof Waterproofing</a></li>
+                        <li><a href="#services" class="hover:text-white transition duration-300">Wall Waterproofing</a></li>
+                        <li><a href="#services" class="hover:text-white transition duration-300">Foundation Protection</a></li>
+                        <li><a href="#services" class="hover:text-white transition duration-300">Bathroom Waterproofing</a></li>
+                        <li><a href="#services" class="hover:text-white transition duration-300">Pool Waterproofing</a></li>
+                        <li><a href="#services" class="hover:text-white transition duration-300">Emergency Repairs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#home" class="hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="#about" class="hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#gallery" class="hover:text-white transition duration-300">Project Gallery</a></li>
+                        <li><a href="#contact" class="hover:text-white transition duration-300">Contact</a></li>
+                        <li><a href="#" onclick="openBookingModal()" class="hover:text-white transition duration-300">Book Service</a></li>
+                        <li><a href="#" class="hover:text-white transition duration-300">Get Quote</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>2 Juwon Osibanjo Avenue</p>
+                        <p>Itamaga, Ikorodu, Lagos</p>
+                        <p>+234 XXX XXX XXXX</p>
+                        <p>info@solidcrete.com.ng</p>
+                        <div class="mt-4">
+                            <button onclick="openWhatsApp()" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs transition duration-300">
+                                WhatsApp Us
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2024 SolidCrete Building Solutions. All rights reserved. | Licensed Waterproofing Contractors</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button onclick="openWhatsApp()" class="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 flex items-center justify-center pulse">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.893 3.506z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Enhanced Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Book Professional Service</h3>
+                    <button onclick="closeBookingModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+                
+                <!-- Booking Steps -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div id="step1" class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">1</div>
+                            <span class="ml-2 text-sm font-medium text-gray-900">Service Details</span>
+                        </div>
+                        <div class="flex-1 h-1 bg-gray-200 mx-4">
+                            <div id="progress1" class="h-1 bg-blue-600 transition-all duration-300" style="width: 33%"></div>
+                        </div>
+                        <div class="flex items-center">
+                            <div id="step2" class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold">2</div>
+                            <span class="ml-2 text-sm font-medium text-gray-500">Contact Info</span>
+                        </div>
+                        <div class="flex-1 h-1 bg-gray-200 mx-4">
+                            <div id="progress2" class="h-1 bg-blue-600 transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <div class="flex items-center">
+                            <div id="step3" class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold">3</div>
+                            <span class="ml-2 text-sm font-medium text-gray-500">Confirmation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="bookingForm" class="space-y-4">
+                    <!-- Step 1: Service Details -->
+                    <div id="bookingStep1">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Service Type *</label>
+                                <select id="serviceType" name="serviceType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    <option value="">Select a service</option>
+                                    <option value="Roof Waterproofing">Roof Waterproofing</option>
+                                    <option value="Wall Waterproofing">Wall Waterproofing</option>
+                                    <option value="Foundation Waterproofing">Foundation Waterproofing</option>
+                                    <option value="Bathroom Waterproofing">Bathroom Waterproofing</option>
+                                    <option value="Pool Waterproofing">Pool Waterproofing</option>
+                                    <option value="Leak Repair">Emergency Leak Repair</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Property Type</label>
+                                <select name="propertyType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="Residential">Residential</option>
+                                    <option value="Commercial">Commercial</option>
+                                    <option value="Industrial">Industrial</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Estimated Area (sqm)</label>
+                                <input type="number" name="area" min="1" step="0.1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 50">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Urgency Level</label>
+                                <select name="urgency" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="standard">Standard (7-14 days)</option>
+                                    <option value="urgent">Urgent (3-5 days)</option>
+                                    <option value="emergency">Emergency (24-48 hours)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Project Description</label>
+                            <textarea rows="3" name="description" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Describe your waterproofing needs, current issues, or specific requirements..."></textarea>
+                        </div>
+                        <button type="button" onclick="nextBookingStep()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">Continue to Contact Details</button>
+                    </div>
+
+                    <!-- Step 2: Contact Information -->
+                    <div id="bookingStep2" class="hidden">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">First Name *</label>
+                                <input type="text" name="firstName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Last Name *</label>
+                                <input type="text" name="lastName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Phone Number *</label>
+                                <input type="tel" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Email Address *</label>
+                                <input type="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Property Address *</label>
+                            <textarea rows="3" name="address" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Full property address including area, city, and state" required></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Preferred Contact Method</label>
+                            <div class="flex space-x-4">
+                                <label class="flex items-center">
+                                    <input type="radio" name="contactMethod" value="phone" class="mr-2" checked>
+                                    <span>Phone Call</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="contactMethod" value="whatsapp" class="mr-2">
+                                    <span>WhatsApp</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="contactMethod" value="email" class="mr-2">
+                                    <span>Email</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex space-x-4">
+                            <button type="button" onclick="prevBookingStep()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition duration-300">Back</button>
+                            <button type="button" onclick="nextBookingStep()" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">Review Booking</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Confirmation -->
+                    <div id="bookingStep3" class="hidden">
+                        <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                            <h4 class="font-semibold text-gray-900 mb-4">Booking Summary</h4>
+                            <div id="bookingSummary" class="space-y-2 text-sm text-gray-600">
+                                <!-- Summary will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <h5 class="font-semibold text-blue-900 mb-2">What happens next?</h5>
+                            <ul class="text-sm text-blue-800 space-y-1">
+                                <li>• We'll contact you within 2 hours to confirm details</li>
+                                <li>• Free site inspection will be scheduled</li>
+                                <li>• Detailed quote provided within 24 hours</li>
+                                <li>• Work can begin as early as next day</li>
+                            </ul>
+                        </div>
+                        <div class="flex space-x-4">
+                            <button type="button" onclick="prevBookingStep()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition duration-300">Back</button>
+                            <button type="submit" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-300 flex items-center justify-center">
+                                <span id="bookingButtonText">Confirm Booking</span>
+                                <div id="bookingSpinner" class="spinner ml-2 hidden"></div>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div id="imageUploadModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Add Project Images</h3>
+                    <button onclick="closeImageUpload()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Project Title</label>
+                        <input type="text" id="projectTitle" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Residential Roof Waterproofing">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Project Location</label>
+                        <input type="text" id="projectLocation" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Victoria Island">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Image URL</label>
+                        <input type="url" id="imageUrl" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://example.com/image.jpg">
+                        <p class="text-sm text-gray-500 mt-1">Enter the URL of your project image</p>
+                    </div>
+                    <button onclick="addProjectImage()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">Add to Gallery</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-24 right-4 z-50 space-y-2"></div>
+
+    <script>
+        // Global variables
+        let currentBookingStep = 1;
+        let bookingData = {};
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.getElementById('mobileMenu').classList.add('hidden');
+                }
+            });
+        });
+
+        // Enhanced Toast Notification System
+        function showToast(message, type = 'success', duration = 5000) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+            const icon = type === 'success' ? '✓' : type === 'error' ? '⚠' : 'ℹ';
+            
+            toast.className = `toast ${bgColor} text-white p-4 rounded-lg shadow-lg max-w-sm transform transition-all duration-300`;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <div class="mr-3 text-xl">${icon}</div>
+                    <div class="flex-1">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200 text-xl">&times;</button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Auto remove
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.style.transform = 'translateX(100%)';
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, duration);
+        }
+
+        // Booking modal functions
+        function openBookingModal(serviceType = '') {
+            document.getElementById('bookingModal').classList.remove('hidden');
+            if (serviceType) {
+                document.getElementById('serviceType').value = serviceType;
+            }
+            document.body.style.overflow = 'hidden';
+            resetBookingSteps();
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            resetBookingSteps();
+        }
+
+        function resetBookingSteps() {
+            currentBookingStep = 1;
+            document.getElementById('bookingStep1').classList.remove('hidden');
+            document.getElementById('bookingStep2').classList.add('hidden');
+            document.getElementById('bookingStep3').classList.add('hidden');
+            updateBookingProgress();
+        }
+
+        function nextBookingStep() {
+            if (currentBookingStep === 1) {
+                // Validate step 1
+                const serviceType = document.getElementById('serviceType').value;
+                if (!serviceType) {
+                    showToast('Please select a service type', 'error');
+                    return;
+                }
+                
+                document.getElementById('bookingStep1').classList.add('hidden');
+                document.getElementById('bookingStep2').classList.remove('hidden');
+                currentBookingStep = 2;
+            } else if (currentBookingStep === 2) {
+                // Validate step 2
+                const requiredFields = document.querySelectorAll('#bookingStep2 [required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('border-red-500');
+                        isValid = false;
+                    } else {
+                        field.classList.remove('border-red-500');
+                    }
+                });
+                
+                if (!isValid) {
+                    showToast('Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                // Generate booking summary
+                generateBookingSummary();
+                
+                document.getElementById('bookingStep2').classList.add('hidden');
+                document.getElementById('bookingStep3').classList.remove('hidden');
+                currentBookingStep = 3;
+            }
+            updateBookingProgress();
+        }
+
+        function prevBookingStep() {
+            if (currentBookingStep === 2) {
+                document.getElementById('bookingStep2').classList.add('hidden');
+                document.getElementById('bookingStep1').classList.remove('hidden');
+                currentBookingStep = 1;
+            } else if (currentBookingStep === 3) {
+                document.getElementById('bookingStep3').classList.add('hidden');
+                document.getElementById('bookingStep2').classList.remove('hidden');
+                currentBookingStep = 2;
+            }
+            updateBookingProgress();
+        }
+
+        function updateBookingProgress() {
+            // Update step indicators
+            for (let i = 1; i <= 3; i++) {
+                const step = document.getElementById(`step${i}`);
+                const progress = document.getElementById(`progress${i}`);
+                
+                if (i <= currentBookingStep) {
+                    step.className = 'w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold';
+                    if (progress) {
+                        progress.style.width = '100%';
+                    }
+                } else {
+                    step.className = 'w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold';
+                    if (progress) {
+                        progress.style.width = '0%';
+                    }
+                }
+            }
+        }
+
+        function generateBookingSummary() {
+            const form = document.getElementById('bookingForm');
+            const formData = new FormData(form);
+            const summary = document.getElementById('bookingSummary');
+            
+            let summaryHTML = '';
+            
+            if (formData.get('serviceType')) {
+                summaryHTML += `<div><strong>Service:</strong> ${formData.get('serviceType')}</div>`;
+            }
+            if (formData.get('propertyType')) {
+                summaryHTML += `<div><strong>Property Type:</strong> ${formData.get('propertyType')}</div>`;
+            }
+            if (formData.get('area')) {
+                summaryHTML += `<div><strong>Area:</strong> ${formData.get('area')} square meters</div>`;
+            }
+            if (formData.get('urgency')) {
+                summaryHTML += `<div><strong>Urgency:</strong> ${formData.get('urgency')}</div>`;
+            }
+            if (formData.get('firstName') && formData.get('lastName')) {
+                summaryHTML += `<div><strong>Contact:</strong> ${formData.get('firstName')} ${formData.get('lastName')}</div>`;
+            }
+            if (formData.get('phone')) {
+                summaryHTML += `<div><strong>Phone:</strong> ${formData.get('phone')}</div>`;
+            }
+            if (formData.get('email')) {
+                summaryHTML += `<div><strong>Email:</strong> ${formData.get('email')}</div>`;
+            }
+            if (formData.get('contactMethod')) {
+                summaryHTML += `<div><strong>Preferred Contact:</strong> ${formData.get('contactMethod')}</div>`;
+            }
+            
+            summary.innerHTML = summaryHTML;
+        }
+
+        // Image upload modal functions
+        function openImageUpload() {
+            document.getElementById('imageUploadModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageUpload() {
+            document.getElementById('imageUploadModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Add project image to gallery
+        function addProjectImage() {
+            const title = document.getElementById('projectTitle').value;
+            const location = document.getElementById('projectLocation').value;
+            const imageUrl = document.getElementById('imageUrl').value;
+
+            if (title && location && imageUrl) {
+                const galleryGrid = document.getElementById('galleryGrid');
+                const newItem = document.createElement('div');
+                newItem.className = 'gallery-item bg-white p-6 rounded-lg shadow-md text-center';
+                newItem.innerHTML = `
+                    <div class="h-48 rounded-lg mb-4 overflow-hidden">
+                        <img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover" onerror="this.src=''; this.alt='Image failed to load'; this.parentElement.innerHTML='<div class=\\'bg-gray-200 h-48 rounded-lg flex items-center justify-center\\'><span class=\\'text-gray-500\\'>📷 Image not available</span></div>';">
+                    </div>
+                    <h3 class="font-semibold text-gray-900">${title}</h3>
+                    <p class="text-gray-600 text-sm">${location}</p>
+                    <div class="text-xs text-green-600 mt-2">✓ Recently Added</div>
+                `;
+                galleryGrid.appendChild(newItem);
+
+                // Clear form and close modal
+                document.getElementById('projectTitle').value = '';
+                document.getElementById('projectLocation').value = '';
+                document.getElementById('imageUrl').value = '';
+                closeImageUpload();
+
+                showToast('Project image added successfully to gallery!');
+            } else {
+                showToast('Please fill in all fields', 'error');
+            }
+        }
+
+        // WhatsApp integration
+        function openWhatsApp() {
+            const phoneNumber = "2348XXXXXXXXX"; // Replace with your actual WhatsApp number
+            const message = "Hello SolidCrete Building Solutions! I'm interested in your professional waterproofing services. Can you please provide more information and schedule a free consultation?";
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            showToast('Opening WhatsApp chat...', 'info');
+        }
+
+        // Send booking notification via email
+        function sendBookingEmail(bookingData) {
+            const subject = `New Booking Request - ${bookingData.service}`;
+            const body = `
+New booking request received:
+
+Service: ${bookingData.service}
+Customer: ${bookingData.name}
+Phone: ${bookingData.phone}
+Email: ${bookingData.email}
+Property Type: ${bookingData.propertyType || 'Not specified'}
+Area: ${bookingData.area || 'Not specified'} sqm
+Urgency: ${bookingData.urgency || 'Standard'}
+Address: ${bookingData.address || 'Not provided'}
+Description: ${bookingData.description || 'None provided'}
+Preferred Contact: ${bookingData.contactMethod || 'Phone'}
+Booking ID: ${bookingData.id}
+Date: ${new Date().toLocaleString()}
+
+Please contact the customer within 2 hours as promised.
+            `.trim();
+
+            const mailtoLink = `mailto:sitesnow77@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailtoLink, '_blank');
+        }
+
+        // Send booking notification via WhatsApp
+        function sendBookingWhatsApp(bookingData) {
+            const phoneNumber = "2348XXXXXXXXX"; // Replace with your actual WhatsApp number
+            const message = `🏗️ NEW BOOKING ALERT - SolidCrete
+
+Service: ${bookingData.service}
+Customer: ${bookingData.name}
+Phone: ${bookingData.phone}
+Email: ${bookingData.email}
+Urgency: ${bookingData.urgency || 'Standard'}
+Area: ${bookingData.area || 'Not specified'} sqm
+Booking ID: ${bookingData.id}
+
+Full details sent to email. Please contact customer within 2 hours.`;
+
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Enhanced quote calculator
+        function calculateQuote() {
+            const serviceType = document.getElementById('quoteService').value;
+            const area = parseFloat(document.getElementById('quoteArea').value);
+            const urgency = document.getElementById('quoteUrgency').value;
+            
+            if (!serviceType || !area || area <= 0) {
+                showToast('Please select service type and enter valid area', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const button = document.querySelector('#quoteButtonText');
+            const spinner = document.getElementById('quoteSpinner');
+            button.textContent = 'Calculating...';
+            spinner.classList.remove('hidden');
+            
+            // Simulate API call
+            setTimeout(() => {
+                const rates = {
+                    'Roof Waterproofing': { base: 2500, material: 800, labor: 1200 },
+                    'Wall Waterproofing': { base: 2000, material: 600, labor: 1000 },
+                    'Foundation Waterproofing': { base: 3000, material: 1000, labor: 1500 },
+                    'Bathroom Waterproofing': { base: 3500, material: 1200, labor: 1800 },
+                    'Pool Waterproofing': { base: 4000, material: 1500, labor: 2000 },
+                    'Leak Repair': { base: 1500, material: 400, labor: 800 }
+                };
+                
+                const serviceRates = rates[serviceType] || rates['Wall Waterproofing'];
+                let materialCost = serviceRates.material * area;
+                let laborCost = serviceRates.labor * area;
+                let totalCost = materialCost + laborCost;
+                
+                // Apply urgency multiplier
+                const urgencyMultipliers = {
+                    'standard': 1.0,
+                    'urgent': 1.2,
+                    'emergency': 1.5
+                };
+                
+                const multiplier = urgencyMultipliers[urgency] || 1.0;
+                totalCost *= multiplier;
+                materialCost *= multiplier;
+                laborCost *= multiplier;
+                
+                document.getElementById('quoteResult').innerHTML = `
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                        <h4 class="font-bold text-blue-900 mb-4 text-lg">Detailed Quote Estimate</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Service:</span>
+                                <span class="font-semibold">${serviceType}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Area:</span>
+                                <span class="font-semibold">${area} sq meters</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Urgency:</span>
+                                <span class="font-semibold">${urgency.charAt(0).toUpperCase() + urgency.slice(1)}</span>
+                            </div>
+                            <hr class="border-blue-200">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Materials:</span>
+                                <span>₦${materialCost.toLocaleString()}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Labor:</span>
+                                <span>₦${laborCost.toLocaleString()}</span>
+                            </div>
+                            <hr class="border-blue-300">
+                            <div class="flex justify-between text-lg font-bold text-blue-900">
+                                <span>Total Estimate:</span>
+                                <span>₦${totalCost.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-yellow-50 rounded border border-yellow-200">
+                            <p class="text-sm text-yellow-800">
+                                <strong>Note:</strong> This is a preliminary estimate. Final quote may vary based on site conditions, material specifications, and additional requirements. Free site inspection included.
+                            </p>
+                        </div>
+                        <div class="mt-4 flex space-x-3">
+                            <button onclick="openBookingModal('${serviceType}')" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                                Book This Service
+                            </button>
+                            <button onclick="openWhatsApp()" class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300">
+                                Discuss on WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Reset button
+                button.textContent = 'Calculate Detailed Quote';
+                spinner.classList.add('hidden');
+                
+                showToast('Quote calculated successfully!');
+            }, 1500);
+        }
+
+        // Enhanced form submissions
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitBtn = document.getElementById('bookingButtonText');
+            const spinner = document.getElementById('bookingSpinner');
+            submitBtn.textContent = 'Processing...';
+            spinner.classList.remove('hidden');
+            
+            // Simulate API call
+            setTimeout(() => {
+                const formData = new FormData(this);
+                const bookingId = 'SC' + Date.now().toString().slice(-6);
+                
+                // Store booking data
+                const booking = {
+                    id: bookingId,
+                    service: formData.get('serviceType'),
+                    name: `${formData.get('firstName')} ${formData.get('lastName')}`,
+                    phone: formData.get('phone'),
+                    email: formData.get('email'),
+                    propertyType: formData.get('propertyType'),
+                    area: formData.get('area'),
+                    urgency: formData.get('urgency'),
+                    address: formData.get('address'),
+                    description: formData.get('description'),
+                    contactMethod: formData.get('contactMethod'),
+                    date: new Date().toISOString(),
+                    status: 'pending'
+                };
+                
+                // Save to localStorage (simulating backend)
+                let bookings = JSON.parse(localStorage.getItem('solidcrete_bookings') || '[]');
+                bookings.push(booking);
+                localStorage.setItem('solidcrete_bookings', JSON.stringify(bookings));
+                
+                // Send notifications
+                sendBookingEmail(booking);
+                sendBookingWhatsApp(booking);
+                
+                showToast(`Booking confirmed! Reference: ${bookingId}. We'll contact you within 2 hours.`, 'success', 8000);
+                closeBookingModal();
+                this.reset();
+                
+                // Reset button
+                submitBtn.textContent = 'Confirm Booking';
+                spinner.classList.add('hidden');
+            }, 2000);
+        });
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+            
+            if (!isValid) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.getElementById('contactButtonText');
+            const spinner = document.getElementById('contactSpinner');
+            submitBtn.textContent = 'Sending...';
+            spinner.classList.remove('hidden');
+            
+            // Simulate API call
+            setTimeout(() => {
+                const formData = new FormData(this);
+                const messageId = 'MSG' + Date.now().toString().slice(-6);
+                
+                // Send contact message via email
+                const subject = `New Contact Message - ${formData.get('serviceInterest') || 'General Inquiry'}`;
+                const body = `
+New contact message received:
+
+Name: ${formData.get('firstName')} ${formData.get('lastName')}
+Email: ${formData.get('email')}
+Phone: ${formData.get('phone')}
+Service Interest: ${formData.get('serviceInterest') || 'Not specified'}
+Message: ${formData.get('message')}
+Message ID: ${messageId}
+Date: ${new Date().toLocaleString()}
+
+Please respond within 4 hours as promised.
+                `.trim();
+
+                const mailtoLink = `mailto:sitesnow77@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.open(mailtoLink, '_blank');
+                
+                showToast(`Message sent successfully! Reference: ${messageId}. We'll respond within 4 hours.`, 'success', 6000);
+                this.reset();
+                
+                // Reset button
+                submitBtn.textContent = 'Send Message';
+                spinner.classList.add('hidden');
+            }, 1500);
+        });
+
+        // Close modals when clicking outside
+        document.getElementById('bookingModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBookingModal();
+            }
+        });
+
+        document.getElementById('imageUploadModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageUpload();
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show welcome message
+            setTimeout(() => {
+                showToast('Welcome to SolidCrete Building Solutions! Get your free quote today.', 'info', 6000);
+            }, 1000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9776d32274076eb4',t:'MTc1NjU4MzUwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+                           

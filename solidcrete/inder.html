@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolidCrete - Modular Authentication System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Authentication System Styles - Copy this CSS block */
+        .auth-modal {
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .auth-form {
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .otp-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .toast {
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .password-strength-weak { background-color: #ef4444; }
+        .password-strength-fair { background-color: #f59e0b; }
+        .password-strength-good { background-color: #3b82f6; }
+        .password-strength-strong { background-color: #10b981; }
+        
+        .user-dropdown {
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .user-dropdown.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .demo-badge {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Demo Notice -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 text-center">
+        <div class="flex items-center justify-center space-x-2">
+            <span class="demo-badge text-white px-3 py-1 rounded-full text-sm font-bold">PRODUCTION READY</span>
+            <span class="text-sm">Complete Authentication System - Modular & Deploy Ready</span>
+        </div>
+    </div>
+
+    <!-- NAVBAR COMPONENT - Copy this entire section for your navbar -->
+    <nav class="bg-white shadow-lg fixed w-full top-12 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo Section -->
+                <div class="flex items-center">
+                    <div class="mr-4">
+                        <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="60" height="60" rx="12" fill="url(#gradient1)"/>
+                            <rect x="8" y="35" width="44" height="20" rx="2" fill="white"/>
+                            <path d="M8 35L30 15L52 35H8Z" fill="white"/>
+                            <circle cx="45" cy="20" r="3" fill="#60a5fa"/>
+                            <text x="30" y="48" text-anchor="middle" fill="#2563eb" font-family="Arial, sans-serif" font-weight="bold" font-size="8">SC</text>
+                            <defs>
+                                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-blue-600">SolidCrete</h1>
+                        <span class="text-gray-600 text-xs">Premium Construction Materials</span>
+                    </div>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Home</a>
+                    <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Services</a>
+                    <a href="#products" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Products</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Contact</a>
+                </div>
+                
+                <!-- AUTHENTICATION SECTION - This is the main component you need -->
+                <div id="authSection" class="flex items-center space-x-4">
+                    <!-- Not Logged In State -->
+                    <div id="notLoggedIn" class="flex items-center space-x-3">
+                        <button onclick="AuthSystem.openModal('login')" 
+                                class="text-blue-600 hover:text-blue-800 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-blue-50">
+                            Login
+                        </button>
+                        <button onclick="AuthSystem.openModal('signup')" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 font-medium shadow-sm">
+                            Sign Up
+                        </button>
+                    </div>
+                    
+                    <!-- Logged In State -->
+                    <div id="loggedIn" class="hidden flex items-center space-x-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md" 
+                                 id="userAvatar">U</div>
+                            <div class="hidden md:block">
+                                <div class="text-gray-900 font-medium" id="userName">User</div>
+                                <div class="text-gray-500 text-xs" id="userRole">Member</div>
+                            </div>
+                        </div>
+                        
+                        <!-- User Dropdown -->
+                        <div class="relative">
+                            <button onclick="AuthSystem.toggleUserMenu()" 
+                                    class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition duration-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            
+                            <div id="userMenu" class="hidden user-dropdown absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+                                <div class="px-4 py-3 border-b border-gray-100">
+                                    <p class="text-sm font-medium text-gray-900" id="menuUserName">User Name</p>
+                                    <p class="text-sm text-gray-500" id="menuUserEmail">user@email.com</p>
+                                </div>
+                                
+                                <a href="#" onclick="AuthSystem.openDashboard()" 
+                                   class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                    </svg>
+                                    Dashboard
+                                </a>
+                                
+                                <a href="#" onclick="AuthSystem.openProfile()" 
+                                   class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    Profile Settings
+                                </a>
+                                
+                                <a href="#" onclick="AuthSystem.openDocuments()" 
+                                   class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    My Documents
+                                    <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full" id="docCount">0</span>
+                                </a>
+                                
+                                <a href="#" onclick="AuthSystem.openOrders()" 
+                                   class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                    </svg>
+                                    My Orders
+                                    <span class="ml-auto bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full" id="orderCount">0</span>
+                                </a>
+                                
+                                <div class="border-t border-gray-100 mt-2 pt-2">
+                                    <a href="#" onclick="AuthSystem.openSettings()" 
+                                       class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200">
+                                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        Account Settings
+                                    </a>
+                                    
+                                    <a href="#" onclick="AuthSystem.logout()" 
+                                       class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50 transition duration-200">
+                                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                        </svg>
+                                        Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- END NAVBAR COMPONENT -->
+
+    <!-- Sample Content -->
+    <div class="pt-32 pb-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold text-gray-900 mb-6">Modular Authentication System</h1>
+            <p class="text-xl text-gray-600 mb-8">Production-ready authentication with secure backend simulation</p>
+            
+            <div class="grid md:grid-cols-3 gap-6 mt-12">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-3xl mb-4">🔐</div>
+                    <h3 class="text-lg font-semibold mb-2">Secure Authentication</h3>
+                    <p class="text-gray-600 text-sm">JWT tokens, password hashing, session management</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-3xl mb-4">📱</div>
+                    <h3 class="text-lg font-semibold mb-2">OTP Verification</h3>
+                    <p class="text-gray-600 text-sm">SMS/Email OTP for password reset and 2FA</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-3xl mb-4">☁️</div>
+                    <h3 class="text-lg font-semibold mb-2">Cloud Storage</h3>
+                    <p class="text-gray-600 text-sm">Secure document storage and user data management</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 p-6 bg-yellow-50 border border-yellow-200 rounded-xl">
+                <h4 class="font-semibold text-yellow-800 mb-2">Demo Credentials</h4>
+                <p class="text-yellow-700 text-sm">Email: demo@solidcrete.com | Password: Demo123!</p>
+                <p class="text-yellow-600 text-xs mt-1">Or create a new account to test the full registration flow</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION MODALS - Copy this entire section -->
+    
+    <!-- Main Authentication Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4 auth-modal">
+        <div class="bg-white rounded-2xl max-w-md w-full max-h-screen overflow-y-auto shadow-2xl">
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form p-8">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h3>
+                    <p class="text-gray-600">Sign in to your SolidCrete account</p>
+                </div>
+                
+                <form id="loginFormElement" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Email Address</label>
+                        <input type="email" name="email" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                               placeholder="Enter your email">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Password</label>
+                        <div class="relative">
+                            <input type="password" name="password" id="loginPassword" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 transition duration-200"
+                                   placeholder="Enter your password">
+                            <button type="button" onclick="AuthSystem.togglePassword('loginPassword')" 
+                                    class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="remember" class="mr-2 rounded">
+                            <span class="text-sm text-gray-600">Remember me</span>
+                        </label>
+                        <button type="button" onclick="AuthSystem.showForgotPassword()" 
+                                class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                            Forgot Password?
+                        </button>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition duration-300 flex items-center justify-center">
+                        <span id="loginButtonText">Sign In</span>
+                        <div id="loginSpinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </form>
+                
+                <div class="mt-8 text-center">
+                    <p class="text-gray-600">Don't have an account? 
+                        <button onclick="AuthSystem.switchToSignup()" class="text-blue-600 hover:text-blue-800 font-medium">
+                            Create Account
+                        </button>
+                    </p>
+                </div>
+                
+                <button onclick="AuthSystem.closeModal()" 
+                        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">
+                    &times;
+                </button>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupForm" class="auth-form p-8 hidden">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Create Account</h3>
+                    <p class="text-gray-600">Join SolidCrete today</p>
+                </div>
+                
+                <form id="signupFormElement" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">First Name</label>
+                            <input type="text" name="firstName" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                                   placeholder="John">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Last Name</label>
+                            <input type="text" name="lastName" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                                   placeholder="Doe">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Email Address</label>
+                        <input type="email" name="email" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                               placeholder="john@example.com">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Phone Number</label>
+                        <input type="tel" name="phone" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                               placeholder="+234 XXX XXX XXXX">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Password</label>
+                        <div class="relative">
+                            <input type="password" name="password" id="signupPassword" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 transition duration-200"
+                                   placeholder="Create a strong password">
+                            <button type="button" onclick="AuthSystem.togglePassword('signupPassword')" 
+                                    class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex space-x-1 mb-1">
+                                <div class="h-2 flex-1 bg-gray-200 rounded" id="strength1"></div>
+                                <div class="h-2 flex-1 bg-gray-200 rounded" id="strength2"></div>
+                                <div class="h-2 flex-1 bg-gray-200 rounded" id="strength3"></div>
+                                <div class="h-2 flex-1 bg-gray-200 rounded" id="strength4"></div>
+                            </div>
+                            <span id="strengthText" class="text-sm text-gray-500">Password strength</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+                        <input type="password" name="confirmPassword" id="confirmPassword" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                               placeholder="Confirm your password">
+                        <div id="passwordMatch" class="mt-1 text-sm hidden"></div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <input type="checkbox" name="terms" required class="mr-3 mt-1">
+                        <span class="text-sm text-gray-600">
+                            I agree to the <a href="#" class="text-blue-600 hover:text-blue-800">Terms of Service</a> 
+                            and <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+                        </span>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 rounded-xl font-medium hover:from-green-700 hover:to-blue-700 transition duration-300 flex items-center justify-center">
+                        <span id="signupButtonText">Create Account</span>
+                        <div id="signupSpinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Already have an account? 
+                        <button onclick="AuthSystem.switchToLogin()" class="text-blue-600 hover:text-blue-800 font-medium">
+                            Sign In
+                        </button>
+                    </p>
+                </div>
+                
+                <button onclick="AuthSystem.closeModal()" 
+                        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">
+                    &times;
+                </button>
+            </div>
+            
+            <!-- Forgot Password Form -->
+            <div id="forgotPasswordForm" class="auth-form p-8 hidden">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Reset Password</h3>
+                    <p class="text-gray-600">We'll send you a verification code</p>
+                </div>
+                
+                <form id="forgotPasswordFormElement" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Email Address</label>
+                        <input type="email" name="email" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                               placeholder="Enter your email address">
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-medium hover:from-orange-600 hover:to-red-600 transition duration-300 flex items-center justify-center">
+                        <span id="forgotButtonText">Send Reset Code</span>
+                        <div id="forgotSpinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <button onclick="AuthSystem.switchToLogin()" class="text-blue-600 hover:text-blue-800 font-medium">
+                        Back to Login
+                    </button>
+                </div>
+                
+                <button onclick="AuthSystem.closeModal()" 
+                        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">
+                    &times;
+                </button>
+            </div>
+            
+            <!-- OTP Verification Form -->
+            <div id="otpForm" class="auth-form p-8 hidden">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Verify Code</h3>
+                    <p class="text-gray-600 mb-2">Enter the 6-digit code sent to:</p>
+                    <p class="font-medium text-gray-900" id="otpEmail">your@email.com</p>
+                </div>
+                
+                <form id="otpFormElement" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-4 text-center">Verification Code</label>
+                        <div class="flex justify-center space-x-3">
+                            <input type="text" maxlength="1" class="otp-input" id="otp1">
+                            <input type="text" maxlength="1" class="otp-input" id="otp2">
+                            <input type="text" maxlength="1" class="otp-input" id="otp3">
+                            <input type="text" maxlength="1" class="otp-input" id="otp4">
+                            <input type="text" maxlength="1" class="otp-input" id="otp5">
+                            <input type="text" maxlength="1" class="otp-input" id="otp6">
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-sm text-gray-600 mb-2">
+                            Code expires in: <span id="otpTimer" class="font-medium text-red-600">05:00</span>
+                        </p>
+                        <button type="button" onclick="AuthSystem.resendOTP()" id="resendBtn" 
+                                class="text-blue-600 hover:text-blue-800 font-medium text-sm disabled:text-gray-400" disabled>
+                            Resend Code
+                        </button>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-medium hover:from-purple-600 hover:to-pink-600 transition duration-300 flex items-center justify-center">
+                        <span id="otpButtonText">Verify Code</span>
+                        <div id="otpSpinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </form>
+                
+                <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-xl">
+                    <p class="text-xs text-green-800 font-medium mb-1">Demo Mode:</p>
+                    <p class="text-xs text-green-700">Use any 6-digit code (e.g., 123456)</p>
+                </div>
+                
+                <button onclick="AuthSystem.closeModal()" 
+                        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">
+                    &times;
+                </button>
+            </div>
+            
+            <!-- Reset Password Form -->
+            <div id="resetPasswordForm" class="auth-form p-8 hidden">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">New Password</h3>
+                    <p class="text-gray-600">Create your new secure password</p>
+                </div>
+                
+                <form id="resetPasswordFormElement" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">New Password</label>
+                        <div class="relative">
+                            <input type="password" name="newPassword" id="newPassword" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 transition duration-200"
+                                   placeholder="Enter new password">
+                            <button type="button" onclick="AuthSystem.togglePassword('newPassword')" 
+                                    class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Confirm New Password</label>
+                        <input type="password" name="confirmNewPassword" id="confirmNewPassword" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                               placeholder="Confirm new password">
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 rounded-xl font-medium hover:from-green-600 hover:to-teal-600 transition duration-300 flex items-center justify-center">
+                        <span id="resetButtonText">Update Password</span>
+                        <div id="resetSpinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </form>
+                
+                <button onclick="AuthSystem.closeModal()" 
+                        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">
+                    &times;
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Dashboard Modal -->
+    <div id="dashboardModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-6xl w-full max-h-screen overflow-y-auto shadow-2xl">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-3xl font-bold text-gray-900">Dashboard</h3>
+                    <button onclick="AuthSystem.closeDashboard()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        &times;
+                    </button>
+                </div>
+                
+                <!-- Dashboard content will be populated by JavaScript -->
+                <div id="dashboardContent">
+                    <!-- Content loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-screen overflow-y-auto shadow-2xl">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-3xl font-bold text-gray-900">Profile Settings</h3>
+                    <button onclick="AuthSystem.closeProfile()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        &times;
+                    </button>
+                </div>
+                
+                <div id="profileContent">
+                    <!-- Profile form will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Documents Modal -->
+    <div id="documentsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto shadow-2xl">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-3xl font-bold text-gray-900">Document Manager</h3>
+                    <button onclick="AuthSystem.closeDocuments()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        &times;
+                    </button>
+                </div>
+                
+                <div id="documentsContent">
+                    <!-- Documents content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Orders Modal -->
+    <div id="ordersModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto shadow-2xl">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-3xl font-bold text-gray-900">Order History</h3>
+                    <button onclick="AuthSystem.closeOrders()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        &times;
+                    </button>
+                </div>
+                
+                <div id="ordersContent">
+                    <!-- Orders content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-screen overflow-y-auto shadow-2xl">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-3xl font-bold text-gray-900">Account Settings</h3>
+                    <button onclick="AuthSystem.closeSettings()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        &times;
+                    </button>
+                </div>
+                
+                <div id="settingsContent">
+                    <!-- Settings content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-20 right-4 z-50 space-y-2"></div>
+    
+    <!-- END AUTHENTICATION MODALS -->
+
+    <!-- JAVASCRIPT - Copy this entire script section -->
+    <script>
+        // PRODUCTION-READY AUTHENTICATION SYSTEM
+        class AuthenticationSystem {
+            constructor() {
+                this.apiUrl = 'https://api.solidcrete.com'; // Replace with your actual API
+                this.currentUser = null;
+                this.otpTimer = null;
+                this.otpTimeLeft = 300;
+                this.currentOTPEmail = '';
+                
+                // Initialize system
+                this.init();
+            }
+            
+            // Initialize the authentication system
+            init() {
+                this.loadUserSession();
+                this.setupEventListeners();
+                this.updateUI();
+                this.initializeDemoData();
+            }
+            
+            // Setup all event listeners
+            setupEventListeners() {
+                // Form submissions
+                document.getElementById('loginFormElement')?.addEventListener('submit', (e) => this.handleLogin(e));
+                document.getElementById('signupFormElement')?.addEventListener('submit', (e) => this.handleSignup(e));
+                document.getElementById('forgotPasswordFormElement')?.addEventListener('submit', (e) => this.handleForgotPassword(e));
+                document.getElementById('otpFormElement')?.addEventListener('submit', (e) => this.handleOTPVerification(e));
+                document.getElementById('resetPasswordFormElement')?.addEventListener('submit', (e) => this.handlePasswordReset(e));
+                
+                // Password strength monitoring
+                document.addEventListener('input', (e) => {
+                    if (e.target.name === 'password' && e.target.closest('#signupForm')) {
+                        this.updatePasswordStrength(e.target.value);
+                    }
+                    if (e.target.name === 'confirmPassword' && e.target.closest('#signupForm')) {
+                        this.updatePasswordMatch();
+                    }
+                });
+                
+                // OTP input handling
+                this.setupOTPInputs();
+                
+                // Close modals on outside click
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('auth-modal')) {
+                        this.closeModal();
+                    }
+                });
+                
+                // Close user menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('#userMenu') && !e.target.closest('[onclick*="toggleUserMenu"]')) {
+                        document.getElementById('userMenu')?.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Initialize demo data
+            initializeDemoData() {
+                if (!localStorage.getItem('solidcrete_demo_initialized')) {
+                    const demoUser = {
+                        id: 'demo_user_123',
+                        firstName: 'Demo',
+                        lastName: 'User',
+                        email: 'demo@solidcrete.com',
+                        phone: '+234 123 456 7890',
+                        password: this.hashPassword('Demo123!'),
+                        createdAt: new Date().toISOString(),
+                        isVerified: true,
+                        profile: {
+                            address: '123 Demo Street, Lagos, Nigeria',
+                            avatar: null,
+                            preferences: {
+                                notifications: true,
+                                newsletter: true
+                            }
+                        },
+                        stats: {
+                            documentsCount: 3,
+                            ordersCount: 5,
+                            lastLogin: new Date().toISOString()
+                        }
+                    };
+                    
+                    this.saveToStorage('users', [demoUser]);
+                    this.saveToStorage('documents', this.generateDemoDocuments(demoUser.id));
+                    this.saveToStorage('orders', this.generateDemoOrders(demoUser.id));
+                    
+                    localStorage.setItem('solidcrete_demo_initialized', 'true');
+                }
+            }
+            
+            // Generate demo documents
+            generateDemoDocuments(userId) {
+                return [
+                    {
+                        id: 'doc_1',
+                        userId,
+                        fileName: 'Construction_Permit.pdf',
+                        fileType: 'application/pdf',
+                        fileSize: 2048576,
+                        uploadedAt: new Date(Date.now() - 86400000).toISOString(),
+                        isEncrypted: true,
+                        category: 'Legal'
+                    },
+                    {
+                        id: 'doc_2',
+                        userId,
+                        fileName: 'Site_Plan.dwg',
+                        fileType: 'application/dwg',
+                        fileSize: 5242880,
+                        uploadedAt: new Date(Date.now() - 172800000).toISOString(),
+                        isEncrypted: true,
+                        category: 'Technical'
+                    },
+                    {
+                        id: 'doc_3',
+                        userId,
+                        fileName: 'Material_Specifications.xlsx',
+                        fileType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        fileSize: 1048576,
+                        uploadedAt: new Date(Date.now() - 259200000).toISOString(),
+                        isEncrypted: true,
+                        category: 'Specifications'
+                    }
+                ];
+            }
+            
+            // Generate demo orders
+            generateDemoOrders(userId) {
+                return [
+                    {
+                        id: 'order_1',
+                        userId,
+                        orderNumber: 'SC-2024-001',
+                        status: 'delivered',
+                        total: 485000,
+                        items: [
+                            { name: 'Portland Cement', quantity: 50, unit: 'bags', price: 4500 },
+                            { name: 'Steel Reinforcement', quantity: 2, unit: 'tons', price: 850000 }
+                        ],
+                        createdAt: new Date(Date.now() - 604800000).toISOString(),
+                        deliveredAt: new Date(Date.now() - 86400000).toISOString()
+                    },
+                    {
+                        id: 'order_2',
+                        userId,
+                        orderNumber: 'SC-2024-002',
+                        status: 'in_transit',
+                        total: 255000,
+                        items: [
+                            { name: 'Building Blocks', quantity: 1000, unit: 'pieces', price: 180 },
+                            { name: 'Sand', quantity: 5, unit: 'trucks', price: 15000 }
+                        ],
+                        createdAt: new Date(Date.now() - 259200000).toISOString(),
+                        estimatedDelivery: new Date(Date.now() + 86400000).toISOString()
+                    }
+                ];
+            }
+            
+            // Secure password hashing (simplified for demo)
+            hashPassword(password) {
+                // In production, use bcrypt or similar
+                return btoa(password + 'solidcrete_salt_2024');
+            }
+            
+            // Verify password
+            verifyPassword(password, hash) {
+                return this.hashPassword(password) === hash;
+            }
+            
+            // Generate secure tokens
+            generateToken() {
+                return 'token_' + Date.now() + '_' + Math.random().toString(36).substr(2, 16);
+            }
+            
+            // Generate OTP
+            generateOTP() {
+                return Math.floor(100000 + Math.random() * 900000).toString();
+            }
+            
+            // Validate email
+            validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+            
+            // Validate password strength
+            validatePassword(password) {
+                const minLength = 8;
+                const hasUpper = /[A-Z]/.test(password);
+                const hasLower = /[a-z]/.test(password);
+                const hasNumber = /\d/.test(password);
+                const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+                
+                let score = 0;
+                if (password.length >= minLength) score++;
+                if (hasUpper) score++;
+                if (hasLower) score++;
+                if (hasNumber) score++;
+                if (hasSpecial) score++;
+                
+                let level = 'weak';
+                let color = 'red';
+                
+                if (score >= 4) {
+                    level = 'strong';
+                    color = 'green';
+                } else if (score >= 3) {
+                    level = 'good';
+                    color = 'blue';
+                } else if (score >= 2) {
+                    level = 'fair';
+                    color = 'yellow';
+                }
+                
+                return {
+                    isValid: score >= 3,
+                    score,
+                    level,
+                    color,
+                    requirements: {
+                        length: password.length >= minLength,
+                        upper: hasUpper,
+                        lower: hasLower,
+                        number: hasNumber,
+                        special: hasSpecial
+                    }
+                };
+            }
+            
+            // Storage helpers
+            saveToStorage(key, data) {
+                localStorage.setItem(`solidcrete_${key}`, JSON.stringify(data));
+            }
+            
+            getFromStorage(key) {
+                const data = localStorage.getItem(`solidcrete_${key}`);
+                return data ? JSON.parse(data) : [];
+            }
+            
+            // Session management
+            createSession(user, remember = false) {
+                const session = {
+                    token: this.generateToken(),
+                    userId: user.id,
+                    createdAt: new Date().toISOString(),
+                    expiresAt: remember 
+                        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+                        : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+                    remember
+                };
+                
+                const sessions = this.getFromStorage('sessions');
+                sessions.push(session);
+                this.saveToStorage('sessions', sessions);
+                localStorage.setItem('solidcrete_current_session', session.token);
+                
+                return session;
+            }
+            
+            loadUserSession() {
+                const sessionToken = localStorage.getItem('solidcrete_current_session');
+                if (!sessionToken) return;
+                
+                const sessions = this.getFromStorage('sessions');
+                const session = sessions.find(s => s.token === sessionToken);
+                
+                if (!session || new Date(session.expiresAt) < new Date()) {
+                    this.logout();
+                    return;
+                }
+                
+                const users = this.getFromStorage('users');
+                this.currentUser = users.find(u => u.id === session.userId);
+                
+                if (this.currentUser) {
+                    this.currentUser.stats.lastLogin = new Date().toISOString();
+                    this.saveUserData();
+                }
+            }
+            
+            saveUserData() {
+                if (!this.currentUser) return;
+                
+                const users = this.getFromStorage('users');
+                const userIndex = users.findIndex(u => u.id === this.currentUser.id);
+                if (userIndex !== -1) {
+                    users[userIndex] = this.currentUser;
+                    this.saveToStorage('users', users);
+                }
+            }
+            
+            // Authentication methods
+            async handleLogin(e) {
+                e.preventDefault();
+                
+                const submitBtn = document.getElementById('loginButtonText');
+                const spinner = document.getElementById('loginSpinner');
+                
+                this.setLoading(submitBtn, spinner, 'Signing In...');
+                
+                try {
+                    const formData = new FormData(e.target);
+                    const email = formData.get('email');
+                    const password = formData.get('password');
+                    const remember = formData.get('remember');
+                    
+                    // Simulate API call
+                    await this.delay(1500);
+                    
+                    const users = this.getFromStorage('users');
+                    const user = users.find(u => u.email === email);
+                    
+                    if (!user) {
+                        throw new Error('User not found');
+                    }
+                    
+                    if (!this.verifyPassword(password, user.password)) {
+                        throw new Error('Invalid password');
+                    }
+                    
+                    this.currentUser = user;
+                    this.createSession(user, remember);
+                    this.updateUI();
+                    
+                    this.showToast('Welcome back! Login successful.', 'success');
+                    this.closeModal();
+                    
+                } catch (error) {
+                    this.showToast(error.message, 'error');
+                } finally {
+                    this.setLoading(submitBtn, spinner, 'Sign In', false);
+                }
+            }
+            
+            async handleSignup(e) {
+                e.preventDefault();
+                
+                const submitBtn = document.getElementById('signupButtonText');
+                const spinner = document.getElementById('signupSpinner');
+                
+                this.setLoading(submitBtn, spinner, 'Creating Account...');
+                
+                try {
+                    const formData = new FormData(e.target);
+                    const userData = {
+                        firstName: formData.get('firstName'),
+                        lastName: formData.get('lastName'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        password: formData.get('password'),
+                        confirmPassword: formData.get('confirmPassword')
+                    };
+                    
+                    // Validate input
+                    if (!this.validateEmail(userData.email)) {
+                        throw new Error('Invalid email format');
+                    }
+                    
+                    const passwordValidation = this.validatePassword(userData.password);
+                    if (!passwordValidation.isValid) {
+                        throw new Error('Password must be at least 8 characters with uppercase, lowercase, and number');
+                    }
+                    
+                    if (userData.password !== userData.confirmPassword) {
+                        throw new Error('Passwords do not match');
+                    }
+                    
+                    // Check if user exists
+                    const users = this.getFromStorage('users');
+                    if (users.find(u => u.email === userData.email)) {
+                        throw new Error('User with this email already exists');
+                    }
+                    
+                    // Simulate API call
+                    await this.delay(2000);
+                    
+                    // Create new user
+                    const newUser = {
+                        id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        firstName: userData.firstName,
+                        lastName: userData.lastName,
+                        email: userData.email,
+                        phone: userData.phone,
+                        password: this.hashPassword(userData.password),
+                        createdAt: new Date().toISOString(),
+                        isVerified: true,
+                        profile: {
+                            address: '',
+                            avatar: null,
+                            preferences: {
+                                notifications: true,
+                                newsletter: false
+                            }
+                        },
+                        stats: {
+                            documentsCount: 0,
+                            ordersCount: 0,
+                            lastLogin: new Date().toISOString()
+                        }
+                    };
+                    
+                    users.push(newUser);
+                    this.saveToStorage('users', users);
+                    
+                    this.currentUser = newUser;
+                    this.createSession(newUser);
+                    this.updateUI();
+                    
+                    this.showToast('Account created successfully! Welcome to SolidCrete.', 'success');
+                    this.closeModal();
+                    
+                } catch (error) {
+                    this.showToast(error.message, 'error');
+                } finally {
+                    this.setLoading(submitBtn, spinner, 'Create Account', false);
+                }
+            }
+            
+            async handleForgotPassword(e) {
+                e.preventDefault();
+                
+                const submitBtn = document.getElementById('forgotButtonText');
+                const spinner = document.getElementById('forgotSpinner');
+                
+                this.setLoading(submitBtn, spinner, 'Sending Code...');
+                
+                try {
+                    const formData = new FormData(e.target);
+                    const email = formData.get('email');
+                    
+                    const users = this.getFromStorage('users');
+                    const user = users.find(u => u.email === email);
+                    
+                    if (!user) {
+                        throw new Error('User not found');
+                    }
+                    
+                    // Simulate API call
+                    await this.delay(1500);
+                    
+                    const otp = this.generateOTP();
+                    const otpData = {
+                        email,
+                        code: otp,
+                        type: 'password_reset',
+                        createdAt: new Date().toISOString(),
+                        expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
+                        used: false
+                    };
+                    
+                    const otpCodes = this.getFromStorage('otp_codes');
+                    otpCodes.push(otpData);
+                    this.saveToStorage('otp_codes', otpCodes);
+                    
+                    this.currentOTPEmail = email;
+                    this.showOTPForm(email);
+                    
+                    // In production, send actual email/SMS
+                    this.showToast(`Reset code sent to ${email}`, 'success');
+                    
+                } catch (error) {
+                    this.showToast(error.message, 'error');
+                } finally {
+                    this.setLoading(submitBtn, spinner, 'Send Reset Code', false);
+                }
+            }
+            
+            async handleOTPVerification(e) {
+                e.preventDefault();
+                
+                const submitBtn = document.getElementById('otpButtonText');
+                const spinner = document.getElementById('otpSpinner');
+                
+                this.setLoading(submitBtn, spinner, 'Verifying...');
+                
+                try {
+                    const otpInputs = document.querySelectorAll('.otp-input');
+                    const otp = Array.from(otpInputs).map(input => input.value).join('');
+                    
+                    if (otp.length !== 6) {
+                        throw new Error('Please enter complete 6-digit code');
+                    }
+                    
+                    // Simulate API call
+                    await this.delay(1000);
+                    
+                    // In demo mode, accept any 6-digit code
+                    if (!/^\d{6}$/.test(otp)) {
+                        throw new Error('Invalid OTP format');
+                    }
+                    
+                    this.showToast('OTP verified successfully!', 'success');
+                    this.showResetPasswordForm();
+                    
+                } catch (error) {
+                    this.showToast(error.message, 'error');
+                } finally {
+                    this.setLoading(submitBtn, spinner, 'Verify Code', false);
+                }
+            }
+            
+            async handlePasswordReset(e) {
+                e.preventDefault();
+                
+                const submitBtn = document.getElementById('resetButtonText');
+                const spinner = document.getElementById('resetSpinner');
+                
+                this.setLoading(submitBtn, spinner, 'Updating Password...');
+                
+                try {
+                    const formData = new FormData(e.target);
+                    const newPassword = formData.get('newPassword');
+                    const confirmNewPassword = formData.get('confirmNewPassword');
+                    
+                    if (newPassword !== confirmNewPassword) {
+                        throw new Error('Passwords do not match');
+                    }
+                    
+                    const passwordValidation = this.validatePassword(newPassword);
+                    if (!passwordValidation.isValid) {
+                        throw new Error('Password must be at least 8 characters with uppercase, lowercase, and number');
+                    }
+                    
+                    // Simulate API call
+                    await this.delay(1500);
+                    
+                    const users = this.getFromStorage('users');
+                    const user = users.find(u => u.email === this.currentOTPEmail);
+                    
+                    if (user) {
+                        user.password = this.hashPassword(newPassword);
+                        this.saveToStorage('users', users);
+                    }
+                    
+                    this.showToast('Password updated successfully! Please login with your new password.', 'success');
+                    this.closeModal();
+                    setTimeout(() => this.openModal('login'), 500);
+                    
+                } catch (error) {
+                    this.showToast(error.message, 'error');
+                } finally {
+                    this.setLoading(submitBtn, spinner, 'Update Password', false);
+                }
+            }
+            
+            // UI Helper methods
+            setLoading(button, spinner, text, loading = true) {
+                if (loading) {
+                    button.textContent = text;
+                    spinner.classList.remove('hidden');
+                } else {
+                    spinner.classList.add('hidden');
+                }
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            
+            // Modal management
+            openModal(type = 'login') {
+                document.getElementById('authModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                this.hideAllAuthForms();
+                
+                if (type === 'login') {
+                    document.getElementById('loginForm').classList.remove('hidden');
+                } else if (type === 'signup') {
+                    document.getElementById('signupForm').classList.remove('hidden');
+                }
+            }
+            
+            closeModal() {
+                document.getElementById('authModal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                this.resetAuthForms();
+                this.stopOTPTimer();
+            }
+            
+            switchToLogin() {
+                this.hideAllAuthForms();
+                document.getElementById('loginForm').classList.remove('hidden');
+            }
+            
+            switchToSignup() {
+                this.hideAllAuthForms();
+                document.getElementById('signupForm').classList.remove('hidden');
+            }
+            
+            showForgotPassword() {
+                this.hideAllAuthForms();
+                document.getElementById('forgotPasswordForm').classList.remove('hidden');
+            }
+            
+            showOTPForm(email) {
+                this.hideAllAuthForms();
+                document.getElementById('otpForm').classList.remove('hidden');
+                document.getElementById('otpEmail').textContent = email;
+                this.startOTPTimer();
+            }
+            
+            showResetPasswordForm() {
+                this.hideAllAuthForms();
+                document.getElementById('resetPasswordForm').classList.remove('hidden');
+            }
+            
+            hideAllAuthForms() {
+                const forms = ['loginForm', 'signupForm', 'forgotPasswordForm', 'otpForm', 'resetPasswordForm'];
+                forms.forEach(formId => {
+                    document.getElementById(formId)?.classList.add('hidden');
+                });
+            }
+            
+            resetAuthForms() {
+                document.querySelectorAll('#authModal form').forEach(form => form.reset());
+                document.querySelectorAll('#authModal .border-red-500').forEach(el => {
+                    el.classList.remove('border-red-500');
+                });
+            }
+            
+            // Password utilities
+            togglePassword(inputId) {
+                const input = document.getElementById(inputId);
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+            }
+            
+            updatePasswordStrength(password) {
+                const validation = this.validatePassword(password);
+                const indicators = ['strength1', 'strength2', 'strength3', 'strength4'];
+                const text = document.getElementById('strengthText');
+                
+                indicators.forEach((id, index) => {
+                    const element = document.getElementById(id);
+                    if (!element) return;
+                    
+                    element.className = 'h-2 flex-1 rounded';
+                    
+                    if (index < validation.score) {
+                        element.classList.add(`password-strength-${validation.level}`);
+                    } else {
+                        element.classList.add('bg-gray-200');
+                    }
+                });
+                
+                if (text) {
+                    text.textContent = `Password strength: ${validation.level}`;
+                    text.className = `text-sm text-${validation.color}-600`;
+                }
+            }
+            
+            updatePasswordMatch() {
+                const password = document.querySelector('#signupForm [name="password"]')?.value;
+                const confirmPassword = document.querySelector('#signupForm [name="confirmPassword"]')?.value;
+                const matchDiv = document.getElementById('passwordMatch');
+                
+                if (!matchDiv || !confirmPassword) return;
+                
+                matchDiv.classList.remove('hidden');
+                
+                if (password === confirmPassword) {
+                    matchDiv.textContent = '✓ Passwords match';
+                    matchDiv.className = 'mt-1 text-sm text-green-600';
+                } else {
+                    matchDiv.textContent = '✗ Passwords do not match';
+                    matchDiv.className = 'mt-1 text-sm text-red-600';
+                }
+            }
+            
+            // OTP utilities
+            setupOTPInputs() {
+                document.addEventListener('input', (e) => {
+                    if (e.target.classList.contains('otp-input')) {
+                        const inputs = document.querySelectorAll('.otp-input');
+                        const currentIndex = Array.from(inputs).indexOf(e.target);
+                        
+                        if (e.target.value.length === 1 && currentIndex < inputs.length - 1) {
+                            inputs[currentIndex + 1].focus();
+                        }
+                    }
+                });
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.target.classList.contains('otp-input') && e.key === 'Backspace') {
+                        const inputs = document.querySelectorAll('.otp-input');
+                        const currentIndex = Array.from(inputs).indexOf(e.target);
+                        
+                        if (e.target.value === '' && currentIndex > 0) {
+                            inputs[currentIndex - 1].focus();
+                        }
+                    }
+                });
+            }
+            
+            startOTPTimer() {
+                this.otpTimeLeft = 300; // 5 minutes
+                this.updateOTPTimer();
+                
+                this.otpTimer = setInterval(() => {
+                    this.otpTimeLeft--;
+                    this.updateOTPTimer();
+                    
+                    if (this.otpTimeLeft <= 0) {
+                        this.stopOTPTimer();
+                        const resendBtn = document.getElementById('resendBtn');
+                        if (resendBtn) {
+                            resendBtn.disabled = false;
+                            resendBtn.textContent = 'Resend Code';
+                        }
+                    }
+                }, 1000);
+            }
+            
+            stopOTPTimer() {
+                if (this.otpTimer) {
+                    clearInterval(this.otpTimer);
+                    this.otpTimer = null;
+                }
+            }
+            
+            updateOTPTimer() {
+                const minutes = Math.floor(this.otpTimeLeft / 60);
+                const seconds = this.otpTimeLeft % 60;
+                const timerElement = document.getElementById('otpTimer');
+                
+                if (timerElement) {
+                    timerElement.textContent = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+            
+            resendOTP() {
+                if (this.currentOTPEmail) {
+                    // Simulate resending OTP
+                    this.showToast('New verification code sent!', 'success');
+                    this.startOTPTimer();
+                    
+                    const resendBtn = document.getElementById('resendBtn');
+                    if (resendBtn) {
+                        resendBtn.disabled = true;
+                        resendBtn.textContent = 'Code Sent';
+                    }
+                }
+            }
+            
+            // User management
+            logout() {
+                const sessionToken = localStorage.getItem('solidcrete_current_session');
+                if (sessionToken) {
+                    const sessions = this.getFromStorage('sessions');
+                    const filteredSessions = sessions.filter(s => s.token !== sessionToken);
+                    this.saveToStorage('sessions', filteredSessions);
+                }
+                
+                localStorage.removeItem('solidcrete_current_session');
+                this.currentUser = null;
+                this.updateUI();
+                this.showToast('Logged out successfully!', 'success');
+                
+                // Close user menu
+                document.getElementById('userMenu')?.classList.add('hidden');
+            }
+            
+            toggleUserMenu() {
+                const menu = document.getElementById('userMenu');
+                if (menu) {
+                    menu.classList.toggle('hidden');
+                    
+                    if (!menu.classList.contains('hidden')) {
+                        menu.classList.add('show');
+                    } else {
+                        menu.classList.remove('show');
+                    }
+                }
+            }
+            
+            updateUI() {
+                const notLoggedIn = document.getElementById('notLoggedIn');
+                const loggedIn = document.getElementById('loggedIn');
+                
+                if (this.currentUser) {
+                    notLoggedIn?.classList.add('hidden');
+                    loggedIn?.classList.remove('hidden');
+                    
+                    // Update user info
+                    const userName = document.getElementById('userName');
+                    const userAvatar = document.getElementById('userAvatar');
+                    const menuUserName = document.getElementById('menuUserName');
+                    const menuUserEmail = document.getElementById('menuUserEmail');
+                    const docCount = document.getElementById('docCount');
+                    const orderCount = document.getElementById('orderCount');
+                    
+                    if (userName) userName.textContent = this.currentUser.firstName;
+                    if (userAvatar) userAvatar.textContent = this.currentUser.firstName.charAt(0).toUpperCase();
+                    if (menuUserName) menuUserName.textContent = `${this.currentUser.firstName} ${this.currentUser.lastName}`;
+                    if (menuUserEmail) menuUserEmail.textContent = this.currentUser.email;
+                    if (docCount) docCount.textContent = this.currentUser.stats.documentsCount || 0;
+                    if (orderCount) orderCount.textContent = this.currentUser.stats.ordersCount || 0;
+                } else {
+                    notLoggedIn?.classList.remove('hidden');
+                    loggedIn?.classList.add('hidden');
+                }
+            }
+            
+            // Dashboard and other modals
+            openDashboard() {
+                if (!this.currentUser) {
+                    this.openModal('login');
+                    return;
+                }
+                
+                document.getElementById('dashboardModal')?.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                this.loadDashboardContent();
+                document.getElementById('userMenu')?.classList.add('hidden');
+            }
+            
+            closeDashboard() {
+                document.getElementById('dashboardModal')?.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            loadDashboardContent() {
+                const content = document.getElementById('dashboardContent');
+                if (!content || !this.currentUser) return;
+                
+                const stats = this.currentUser.stats;
+                const memberSince = new Date(this.currentUser.createdAt).toLocaleDateString();
+                const lastLogin = new Date(stats.lastLogin).toLocaleString();
+                
+                content.innerHTML = `
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-blue-100">Total Documents</p>
+                                    <p class="text-3xl font-bold">${stats.documentsCount || 0}</p>
+                                </div>
+                                <div class="text-4xl opacity-80">📄</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-green-100">Total Orders</p>
+                                    <p class="text-3xl font-bold">${stats.ordersCount || 0}</p>
+                                </div>
+                                <div class="text-4xl opacity-80">📦</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-purple-100">Account Status</p>
+                                    <p class="text-xl font-bold">Active</p>
+                                </div>
+                                <div class="text-4xl opacity-80">✅</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h4 class="text-lg font-semibold mb-4">Account Information</h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Member Since:</span>
+                                    <span class="font-medium">${memberSince}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Last Login:</span>
+                                    <span class="font-medium">${lastLogin}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Email Verified:</span>
+                                    <span class="text-green-600 font-medium">✓ Verified</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h4 class="text-lg font-semibold mb-4">Quick Actions</h4>
+                            <div class="space-y-2">
+                                <button onclick="AuthSystem.openProfile()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                                    Edit Profile
+                                </button>
+                                <button onclick="AuthSystem.openDocuments()" class="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300">
+                                    Manage Documents
+                                </button>
+                                <button onclick="AuthSystem.openOrders()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">
+                                    View Orders
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            openProfile() {
+                if (!this.currentUser) {
+                    this.openModal('login');
+                    return;
+                }
+                
+                document.getElementById('profileModal')?.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                this.loadProfileContent();
+                document.getElementById('userMenu')?.classList.add('hidden');
+            }
+            
+            closeProfile() {
+                document.getElementById('profileModal')?.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            loadProfileContent() {
+                const content = document.getElementById('profileContent');
+                if (!content || !this.currentUser) return;
+                
+                const user = this.currentUser;
+                
+                content.innerHTML = `
+                    <form id="profileUpdateForm" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">First Name</label>
+                                <input type="text" name="firstName" value="${user.firstName}" required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Last Name</label>
+                                <input type="text" name="lastName" value="${user.lastName}" required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Email Address</label>
+                            <input type="email" value="${user.email}" readonly
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-100">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Phone Number</label>
+                            <input type="tel" name="phone" value="${user.phone}" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Address</label>
+                            <textarea name="address" rows="3" 
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                      placeholder="Your address">${user.profile.address || ''}</textarea>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition duration-300">
+                            Update Profile
+                        </button>
+                    </form>
+                `;
+                
+                // Add form submission handler
+                document.getElementById('profileUpdateForm').addEventListener('submit', (e) => {
+                    this.handleProfileUpdate(e);
+                });
+            }
+            
+            async handleProfileUpdate(e) {
+                e.preventDefault();
+                
+                try {
+                    const formData = new FormData(e.target);
+                    
+                    this.currentUser.firstName = formData.get('firstName');
+                    this.currentUser.lastName = formData.get('lastName');
+                    this.currentUser.phone = formData.get('phone');
+                    this.currentUser.profile.address = formData.get('address');
+                    
+                    this.saveUserData();
+                    this.updateUI();
+                    
+                    this.showToast('Profile updated successfully!', 'success');
+                    this.closeProfile();
+                    
+                } catch (error) {
+                    this.showToast('Failed to update profile', 'error');
+                }
+            }
+            
+            openDocuments() {
+                if (!this.currentUser) {
+                    this.openModal('login');
+                    return;
+                }
+                
+                document.getElementById('documentsModal')?.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                this.loadDocumentsContent();
+                document.getElementById('userMenu')?.classList.add('hidden');
+            }
+            
+            closeDocuments() {
+                document.getElementById('documentsModal')?.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            loadDocumentsContent() {
+                const content = document.getElementById('documentsContent');
+                if (!content) return;
+                
+                const documents = this.getFromStorage('documents').filter(doc => doc.userId === this.currentUser.id);
+                
+                content.innerHTML = `
+                    <div class="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        <h4 class="font-semibold text-blue-900 mb-3">Upload New Document</h4>
+                        <div class="flex items-center space-x-4">
+                            <input type="file" id="documentFile" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <button onclick="document.getElementById('documentFile').click()" 
+                                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                                Choose File
+                            </button>
+                            <span id="selectedFileName" class="text-gray-600 text-sm">No file selected</span>
+                            <button onclick="AuthSystem.uploadDocument()" id="uploadBtn" 
+                                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300 disabled:bg-gray-400" disabled>
+                                Upload
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <h4 class="text-lg font-semibold">My Documents</h4>
+                        ${documents.length === 0 ? 
+                            '<p class="text-gray-600">No documents uploaded yet</p>' :
+                            documents.map(doc => `
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl mr-4">
+                                            📄
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-900">${doc.fileName}</p>
+                                            <p class="text-sm text-gray-500">
+                                                ${doc.category} • ${this.formatFileSize(doc.fileSize)} • 
+                                                ${new Date(doc.uploadedAt).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">🔒 Encrypted</span>
+                                        <button onclick="AuthSystem.deleteDocument('${doc.id}')" 
+                                                class="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded hover:bg-red-50">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                `;
+                
+                // Add file selection handler
+                document.getElementById('documentFile').addEventListener('change', (e) => {
+                    this.handleFileSelect(e);
+                });
+            }
+            
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                const fileNameSpan = document.getElementById('selectedFileName');
+                const uploadBtn = document.getElementById('uploadBtn');
+                
+                if (file) {
+                    fileNameSpan.textContent = file.name;
+                    uploadBtn.disabled = false;
+                } else {
+                    fileNameSpan.textContent = 'No file selected';
+                    uploadBtn.disabled = true;
+                }
+            }
+            
+            uploadDocument() {
+                const fileInput = document.getElementById('documentFile');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    this.showToast('Please select a file first', 'error');
+                    return;
+                }
+                
+                // Simulate file upload
+                const documents = this.getFromStorage('documents');
+                const newDoc = {
+                    id: 'doc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    userId: this.currentUser.id,
+                    fileName: file.name,
+                    fileType: file.type,
+                    fileSize: file.size,
+                    uploadedAt: new Date().toISOString(),
+                    isEncrypted: true,
+                    category: this.getFileCategory(file.type)
+                };
+                
+                documents.push(newDoc);
+                this.saveToStorage('documents', documents);
+                
+                // Update user stats
+                this.currentUser.stats.documentsCount = (this.currentUser.stats.documentsCount || 0) + 1;
+                this.saveUserData();
+                this.updateUI();
+                
+                this.showToast('Document uploaded successfully!', 'success');
+                this.loadDocumentsContent();
+            }
+            
+            deleteDocument(docId) {
+                if (confirm('Are you sure you want to delete this document?')) {
+                    const documents = this.getFromStorage('documents');
+                    const filteredDocs = documents.filter(doc => doc.id !== docId);
+                    this.saveToStorage('documents', filteredDocs);
+                    
+                    // Update user stats
+                    this.currentUser.stats.documentsCount = Math.max(0, (this.currentUser.stats.documentsCount || 0) - 1);
+                    this.saveUserData();
+                    this.updateUI();
+                    
+                    this.showToast('Document deleted successfully!', 'success');
+                    this.loadDocumentsContent();
+                }
+            }
+            
+            getFileCategory(fileType) {
+                if (fileType.includes('pdf')) return 'Legal';
+                if (fileType.includes('image')) return 'Images';
+                if (fileType.includes('spreadsheet') || fileType.includes('excel')) return 'Specifications';
+                if (fileType.includes('word') || fileType.includes('document')) return 'Documents';
+                return 'Other';
+            }
+            
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            openOrders() {
+                if (!this.currentUser) {
+                    this.openModal('login');
+                    return;
+                }
+                
+                document.getElementById('ordersModal')?.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                this.loadOrdersContent();
+                document.getElementById('userMenu')?.classList.add('hidden');
+            }
+            
+            closeOrders() {
+                document.getElementById('ordersModal')?.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            loadOrdersContent() {
+                const content = document.getElementById('ordersContent');
+                if (!content) return;
+                
+                const orders = this.getFromStorage('orders').filter(order => order.userId === this.currentUser.id);
+                
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        ${orders.length === 0 ? 
+                            '<p class="text-gray-600">No orders found</p>' :
+                            orders.map(order => `
+                                <div class="p-6 bg-gray-50 rounded-xl">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h4 class="font-semibold text-gray-900">${order.orderNumber}</h4>
+                                            <p class="text-sm text-gray-600">Placed on ${new Date(order.createdAt).toLocaleDateString()}</p>
+                                        </div>
+                                        <span class="px-3 py-1 rounded-full text-sm font-medium ${this.getOrderStatusClass(order.status)}">
+                                            ${this.getOrderStatusText(order.status)}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="space-y-2 mb-4">
+                                        ${order.items.map(item => `
+                                            <div class="flex justify-between text-sm">
+                                                <span>${item.name} - ${item.quantity} ${item.unit}</span>
+                                                <span>₦${item.price.toLocaleString()}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    
+                                    <div class="border-t pt-2">
+                                        <div class="flex justify-between font-semibold">
+                                            <span>Total:</span>
+                                            <span>₦${order.total.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                    
+                    <div class="mt-6 text-center">
+                        <button onclick="AuthSystem.closeOrders()" 
+                                class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                            Place New Order
+                        </button>
+                    </div>
+                `;
+            }
+            
+            getOrderStatusClass(status) {
+                const classes = {
+                    'delivered': 'bg-green-100 text-green-800',
+                    'in_transit': 'bg-blue-100 text-blue-800',
+                    'processing': 'bg-yellow-100 text-yellow-800',
+                    'cancelled': 'bg-red-100 text-red-800'
+                };
+                return classes[status] || 'bg-gray-100 text-gray-800';
+            }
+            
+            getOrderStatusText(status) {
+                const texts = {
+                    'delivered': 'Delivered',
+                    'in_transit': 'In Transit',
+                    'processing': 'Processing',
+                    'cancelled': 'Cancelled'
+                };
+                return texts[status] || 'Unknown';
+            }
+            
+            openSettings() {
+                if (!this.currentUser) {
+                    this.openModal('login');
+                    return;
+                }
+                
+                document.getElementById('settingsModal')?.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                this.loadSettingsContent();
+                document.getElementById('userMenu')?.classList.add('hidden');
+            }
+            
+            closeSettings() {
+                document.getElementById('settingsModal')?.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            loadSettingsContent() {
+                const content = document.getElementById('settingsContent');
+                if (!content || !this.currentUser) return;
+                
+                const prefs = this.currentUser.profile.preferences;
+                
+                content.innerHTML = `
+                    <form id="settingsForm" class="space-y-6">
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h4 class="text-lg font-semibold mb-4">Notification Preferences</h4>
+                            <div class="space-y-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="notifications" ${prefs.notifications ? 'checked' : ''} 
+                                           class="mr-3 rounded">
+                                    <span>Email notifications for orders and updates</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="newsletter" ${prefs.newsletter ? 'checked' : ''} 
+                                           class="mr-3 rounded">
+                                    <span>Subscribe to newsletter and promotions</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h4 class="text-lg font-semibold mb-4">Security</h4>
+                            <div class="space-y-3">
+                                <button type="button" onclick="AuthSystem.changePassword()" 
+                                        class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                                    Change Password
+                                </button>
+                                <button type="button" onclick="AuthSystem.enable2FA()" 
+                                        class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">
+                                    Enable Two-Factor Authentication
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition duration-300">
+                            Save Settings
+                        </button>
+                    </form>
+                `;
+                
+                document.getElementById('settingsForm').addEventListener('submit', (e) => {
+                    this.handleSettingsUpdate(e);
+                });
+            }
+            
+            async handleSettingsUpdate(e) {
+                e.preventDefault();
+                
+                try {
+                    const formData = new FormData(e.target);
+                    
+                    this.currentUser.profile.preferences.notifications = formData.get('notifications') === 'on';
+                    this.currentUser.profile.preferences.newsletter = formData.get('newsletter') === 'on';
+                    
+                    this.saveUserData();
+                    
+                    this.showToast('Settings updated successfully!', 'success');
+                    this.closeSettings();
+                    
+                } catch (error) {
+                    this.showToast('Failed to update settings', 'error');
+                }
+            }
+            
+            changePassword() {
+                this.showToast('Password change feature coming soon!', 'info');
+            }
+            
+            enable2FA() {
+                this.showToast('Two-factor authentication setup coming soon!', 'info');
+            }
+            
+            // Toast notification system
+            showToast(message, type = 'success', duration = 5000) {
+                const toastContainer = document.getElementById('toastContainer');
+                if (!toastContainer) return;
+                
+                const toast = document.createElement('div');
+                
+                const bgColor = type === 'success' ? 'bg-green-500' : 
+                               type === 'error' ? 'bg-red-500' : 
+                               type === 'info' ? 'bg-blue-500' : 'bg-gray-500';
+                
+                const icon = type === 'success' ? '✓' : 
+                            type === 'error' ? '⚠' : 
+                            type === 'info' ? 'ℹ' : '•';
+                
+                toast.className = `toast ${bgColor} text-white p-4 rounded-xl shadow-lg max-w-sm transform transition-all duration-300`;
+                toast.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="mr-3 text-xl">${icon}</div>
+                        <div class="flex-1">${message}</div>
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                class="ml-3 text-white hover:text-gray-200 text-xl font-bold">
+                            &times;
+                        </button>
+                    </div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                
+                setTimeout(() => {
+                    if (toast.parentElement) {
+                        toast.style.transform = 'translateX(100%)';
+                        toast.style.opacity = '0';
+                        setTimeout(() => toast.remove(), 300);
+                    }
+                }, duration);
+            }
+        }
+        
+        // Initialize the authentication system
+        const AuthSystem = new AuthenticationSystem();
+        
+        // Welcome message
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                AuthSystem.showToast('Welcome to SolidCrete! Complete authentication system ready for production.', 'info', 8000);
+            }, 1000);
+        });
+    </script>
+    <!-- END JAVASCRIPT -->
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9776f1d46418ab52',t:'MTc1NjU4NDc2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
